@@ -104,7 +104,8 @@
 <meta property="og:description" content="最近一直在看“中国有嘻哈”这个综艺节目，通过这个节目听了一些嘻哈歌曲，了解了一些嘻哈文化，感觉还是挺有意思的。这个节目吸引人的地方有很多，除了嘻哈音乐本身，赛制过程中制作人和选手之间的diss，选手和选手之间的diss，粉丝和粉丝之间的diss也非常有趣。上周末结束的决赛也产生了足够劲爆的话题效果，竟然出现了双冠军。作为一个技术博客的开博之作，本文不讨论比赛中的黑幕等八卦消息，而是讨论下冠军产生过">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://limiao06.github.io/images/Rap_of_China.png">
-<meta property="og:updated_time" content="2017-09-14T04:51:06.000Z">
+<meta property="og:image" content="https://limiao06.github.io/images/distribution_R!CH.png">
+<meta property="og:updated_time" content="2017-09-14T07:55:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="中国有嘻哈决赛冠军平票的概率问题">
 <meta name="twitter:description" content="最近一直在看“中国有嘻哈”这个综艺节目，通过这个节目听了一些嘻哈歌曲，了解了一些嘻哈文化，感觉还是挺有意思的。这个节目吸引人的地方有很多，除了嘻哈音乐本身，赛制过程中制作人和选手之间的diss，选手和选手之间的diss，粉丝和粉丝之间的diss也非常有趣。上周末结束的决赛也产生了足够劲爆的话题效果，竟然出现了双冠军。作为一个技术博客的开博之作，本文不讨论比赛中的黑幕等八卦消息，而是讨论下冠军产生过">
@@ -416,6 +417,25 @@
 <h3 id="结果-1"><a href="#结果-1" class="headerlink" title="结果"></a>结果</h3><p>将结果整理一下，假设三组制作人和100个Rapper随机投票，发生平票的可能性是： $$\frac{\sum_{r=0}^{100} C_{100}^{r} f(125-r)}{2^{100}\times 51^{3}}\approx 0.01452$$</p>
 <p>也就是大约有1.45%的可能性会平票。</p>
 <p>本文只是从概率论的角度，假设投票人完全随机投票，探讨了发生平票的可能性，仅供娱乐参考。</p>
+<p>————————————————————————— 9.14 update —————————————————————————</p>
+<h2 id="“更复杂”的情况"><a href="#“更复杂”的情况" class="headerlink" title="“更复杂”的情况"></a>“更复杂”的情况</h2><p>看了下别的论坛，大家也都有讨论这个事情，有些同学说，“假设三组制作人随机投票是不对的！投0 vs. 50 这种票型的概率明显要小很多嘛！别以为我们读书少欺骗我们!”<br>我看到之后，感觉这些同学说的非常有道理，所以想考虑下这种情况下如何继续求解这个问题。但是我们仍需要进行一些假设才能求解。</p>
+<h3 id="三条假设"><a href="#三条假设" class="headerlink" title="三条假设"></a>三条假设</h3><p>既然是决赛了，我们假设两位选手水平都比较高，因此这里给出三条假设：</p>
+<ol>
+<li>对于100位Rapper，投给其中任何一个人的概率都是0.5；</li>
+<li>对于制作人，投票的分数应该也是会比较接近的，0 vs. 50 或者 50 vs. 0 这种票型的概率应该很低。<br>我就找了一个和正态分布长的有些像的分布$p(x)$，这个分布大概形状如下图：<br><img src="/images/distribution_R!CH.png" alt=""></li>
+<li>Rapper评审和制作人之间的投票是相互独立的。</li>
+</ol>
+<p>注意： 本节提出的假设和上一节“复杂情况”的假设事实上只有第二条假设不同，上一节假设制作人每种投票的概率都是1/51，而这里我们假设投票满足概率分布$p(x)$。</p>
+<h3 id="求解"><a href="#求解" class="headerlink" title="求解"></a>求解</h3><p>在“复杂问题”那部分的求解过程基础上，这个问题的求解也不是很麻烦，只是把分子分母这种方法替换成概率就可以了。</p>
+<p>对于100个Rapper, A选手获得$r$票的概率是$\frac{C_{100}^{r}}{2^{100}}$。</p>
+<p>三组制作人给A选手投($125-r$)票的概率是多少呢？我们可以先求解整数规划问题：$$x+y+z = 125-r, 0 \leq x,y,z \leq 50$$<br>假设这个问题可行解的集合是$S(125-r)$，集合中的每个元素是一组$x,y,z$的取值。</p>
+<p>那么三组制作人给A选手投($125-r$)票的概率等于：<br>$$F(125-r) = \sum_{(x,y,z) \in S(125-r)} p(x)p(y)p(z)$$</p>
+<p>那么最终平票的概率就是：$$\sum_{r=0}^{100} \frac{C_{100}^{r}}{2^{100}}  F(125-r)$$</p>
+<h3 id="结果-2"><a href="#结果-2" class="headerlink" title="结果"></a>结果</h3><p>稍微修改一下程序（可以参考“代码实现”那篇博客），就可以计算出这种情况下平票的概率$\approx 0.05041$。发生平票的概率相比“复杂情况”变大了！</p>
+<p>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-<br>-</p>
+<p>细心的读者可能发现了：“等等，这和你简单情况那一节的结果一样啊！”</p>
+<p>哈哈，被你们发现了，原因就在于我选择的分布$p(x)$上，我选择的$p(x) = \frac{C_{50}^x}{2^{50}}$，数学名词叫二项分布，实际上就是假设随机投50次票，每次以0.5的概率投给A选手，最终A选手得x票的概率。这样一来，看似“更复杂”的情况就退化成了250个人随机投票的简单情况，当然结果是一样的了，是不是很有趣:)</p>
+<p>当然，选择不同的分布$p(x)$，会使得最终的平票概率有所不同，我直观感觉，如果分布$p(x)$越平坦（最平坦就是第二节的情况），平票的概率越小；分布$p(x)$越尖锐，平票的概率越大，极端是制作人只会投平票，那么最终平票的概率相当于100个Rapper随机投票平票的概率，约等于0.07959。</p>
 
       
     </div>
@@ -596,7 +616,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单情况"><span class="nav-number">1.</span> <span class="nav-text">简单情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分母："><span class="nav-number">1.1.</span> <span class="nav-text">分母：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分子："><span class="nav-number">1.2.</span> <span class="nav-text">分子：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂情况"><span class="nav-number">2.</span> <span class="nav-text">复杂情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分母：-1"><span class="nav-number">2.1.</span> <span class="nav-text">分母：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分子：-1"><span class="nav-number">2.2.</span> <span class="nav-text">分子：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果-1"><span class="nav-number">2.3.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单情况"><span class="nav-number">1.</span> <span class="nav-text">简单情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分母："><span class="nav-number">1.1.</span> <span class="nav-text">分母：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分子："><span class="nav-number">1.2.</span> <span class="nav-text">分子：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂情况"><span class="nav-number">2.</span> <span class="nav-text">复杂情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分母：-1"><span class="nav-number">2.1.</span> <span class="nav-text">分母：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分子：-1"><span class="nav-number">2.2.</span> <span class="nav-text">分子：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果-1"><span class="nav-number">2.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#“更复杂”的情况"><span class="nav-number">3.</span> <span class="nav-text">“更复杂”的情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三条假设"><span class="nav-number">3.1.</span> <span class="nav-text">三条假设</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#求解"><span class="nav-number">3.2.</span> <span class="nav-text">求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果-2"><span class="nav-number">3.3.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></div>
             
 
           </div>
