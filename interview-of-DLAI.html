@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,Andrew Ng," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="摘要本博客记录了吴恩达新开设的深度学习在线课程中名人访谈部分的一些内容和博主的一些心得体会。 前言前一段时间，吴恩达从百度离职的消息闹的沸沸扬扬，大家都非常关注吴恩达离开百度后会从事什么新的工作，并给出了很多猜想。事情的结局至少让我很出乎意料：他继续从事了在线教育事业，开设了一门新的深度学习在线课程。 我登陆Coursera，查看了课程的详情，发现该课程可以免费体验7天，7天之后每月需要支付49美">
+<meta name="keywords" content="DeepLearning,Andrew Ng">
+<meta property="og:type" content="article">
+<meta property="og:title" content="吴恩达深度学习课程笔记之访谈部分">
+<meta property="og:url" content="https://limiao06.github.io/interview-of-DLAI.html">
+<meta property="og:site_name" content="Miao&#39;s Blog">
+<meta property="og:description" content="摘要本博客记录了吴恩达新开设的深度学习在线课程中名人访谈部分的一些内容和博主的一些心得体会。 前言前一段时间，吴恩达从百度离职的消息闹的沸沸扬扬，大家都非常关注吴恩达离开百度后会从事什么新的工作，并给出了很多猜想。事情的结局至少让我很出乎意料：他继续从事了在线教育事业，开设了一门新的深度学习在线课程。 我登陆Coursera，查看了课程的详情，发现该课程可以免费体验7天，7天之后每月需要支付49美">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://limiao06.github.io/images/deeplearning.ai.png">
+<meta property="og:image" content="https://limiao06.github.io/images/dlai_interview_people.png">
+<meta property="og:updated_time" content="2017-09-19T14:36:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="吴恩达深度学习课程笔记之访谈部分">
+<meta name="twitter:description" content="摘要本博客记录了吴恩达新开设的深度学习在线课程中名人访谈部分的一些内容和博主的一些心得体会。 前言前一段时间，吴恩达从百度离职的消息闹的沸沸扬扬，大家都非常关注吴恩达离开百度后会从事什么新的工作，并给出了很多猜想。事情的结局至少让我很出乎意料：他继续从事了在线教育事业，开设了一门新的深度学习在线课程。 我登陆Coursera，查看了课程的详情，发现该课程可以免费体验7天，7天之后每月需要支付49美">
+<meta name="twitter:image" content="https://limiao06.github.io/images/deeplearning.ai.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://limiao06.github.io/interview-of-DLAI.html"/>
+
+
+
+
+
+  <title>吴恩达深度学习课程笔记之访谈部分 | Miao's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6089b74b1c113523d92ac8ca8017dd49";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Miao's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://limiao06.github.io/interview-of-DLAI.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Miao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Miao's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">吴恩达深度学习课程笔记之访谈部分</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-19T14:50:16+08:00">
+                2017-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DL/" itemprop="url" rel="index">
+                    <span itemprop="name">DL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/interview-of-DLAI.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="interview-of-DLAI.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本博客记录了吴恩达新开设的深度学习在线课程中名人访谈部分的一些内容和博主的一些心得体会。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前一段时间，吴恩达从百度离职的消息闹的沸沸扬扬，大家都非常关注吴恩达离开百度后会从事什么新的工作，并给出了很多猜想。事情的结局至少让我很出乎意料：他继续从事了在线教育事业，开设了一门新的深度学习在线课程。<br><img src="/images/deeplearning.ai.png" alt=""></p>
+<p>我登陆Coursera，查看了课程的详情，发现该课程可以免费体验7天，7天之后每月需要支付49美元的学费，如果学习能力足够强，可以7天内学完全部内容然后取消课程，这样可以不用支付任何费用。我本来想挑战一下7天上完，但是仔细一看，该系列课程共有5个课程，其中第四个和第五个课程还没有开始。因此如果想不花钱，必须等到5个课程全部开始后才能开始挑战。</p>
+<p>我又想到了申请Coursera的财务援助，网上说还是很容易通过的。财务援助申请中首先需要写明教育背景、年收入、工作情况，这个不难，我就如实按照研究生的收入情况填写，另外一栏是“你每月能承受多少钱来付给课程”，我的目的既然是一分钱都不想花，只能填0了…，接下来需要分别用至少150个英文单词来描述你为什么申请财务援助以及这个课程对你达成事业目标有什么帮助，我真诚的填写了自己窘困的财务状况和课程可能对我的帮助（我发现高中毕业后，写两段150单词的英文短文还是挺难的，真的）。这时，再完成最后一组问题就可以大功告成了！最后一组问题是：“你是否愿意使用低利息的贷款来支付课程？”，我就是不想花钱，直接选择了“否”，“如果你选择了否，请告诉我们为什么？”，我擦！为什么？我就是不想花钱，怎么解释为什么？</p>
+<p>就这样我倒在了最后一个问题上，默默的关掉了财务援助页面，思考还是等课程全了之后突击7天吧。（同时思考，为了省这点钱花这么大工夫值得吗？）</p>
+<p>几天之后，突然发现网易云课堂把这个课程购买了，免费提供给国内的同学，虽然只包含视频，不包含作业，但是还是很不错的，给网易点个赞！对于和我一样想省钱的同学，可以先在网易看视频，然后等Coursera上课程内容完整了，利用7天免费时间下载作业等资料去做。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>观看了已经发布出来的视频之后，还是有很多收获的，如果时间允许，可以整理成博客发出来。这个深度学习系列课程的一个特点是，吴恩达请了一些深度学习领域的大牛，进行了访谈，访谈主题包含大牛如何踏入这一领域，大牛的一些经历，大牛对人工智能和深度学习的认识，大牛对从业者的建议等。 本文列举了目前已发布课程中采访的各个大牛，只记录了访谈中我感兴趣的部分，因此我记录内容的多少并不能反映采访内容的多少。想了解全部的访谈内容，建议去网易云课堂上观看完整视频。<br><img src="/images/dlai_interview_people.png" alt=""></p>
+<h3 id="Geoffrey-Hinton"><a href="#Geoffrey-Hinton" class="headerlink" title="Geoffrey Hinton"></a>Geoffrey Hinton</h3><p>经历：<br>儿时一个大牛的一次谈话让Hinton对大脑如何存储信息非常感兴趣。大学时在剑桥学习生理学和物理学，之后开始转而学习哲学，又开始转而学习心理学，然后做了木匠，最后决定学习人工智能，去了爱丁堡大学（在人工智能发展早期，爱丁堡是欧洲最重要的人工智能研究基地）。那里他的导师做了一些神经网络的工作，同时正好放弃了神经网络，转向符号主义的人工智能（连接主义被抛弃的时期，大部分神经网络的研究人员都开始研究当时看起来更加有前途的符号推理）。虽然和导师的观点有不少冲突，Hinton还是坚持自己的想法，读完了博士。但是他在英国找不到工作，随后申请并得到了加州的奖学金，就前往了加州，那里对于神经网络的态度很开放，Hinton在那里发表了著名的反向传播的算法。事实上在那一时期很多人都先后发明过反向传播类似的方法，但是Hinton说服了Nature的审稿人，在Nature上发表了文章，引起了较大的轰动。</p>
+<p>回头看最兴奋的技术发现：</p>
+<ol>
+<li>最优美的是玻尔兹曼机/受限玻尔兹曼机（Boltzmann machine/restricted boltzmann machine）</li>
+<li>深度信念网络（Deep Belief network）</li>
+<li>变分方法（variational methods）</li>
+</ol>
+<p>一些观点：</p>
+<ol>
+<li>大脑可能使用的是另一套学习机制，不完全是反向传播</li>
+<li>讨论了Capsules这个想法（没听懂）</li>
+<li>人类是采用无监督学习方式学习的，无监督学习长远意义上是很重要的，但是现实是最近10年来有监督学习、有标签的鉴别性学习是最有效的。</li>
+<li>GAN是深度学习领域既重要又“真正新”的想法，可能会有重大突破</li>
+</ol>
+<p>对想入门AI或者DL的同学的建议：</p>
+<ol>
+<li>多读论文，但是不要读太多，特别是对于创造性的研究者；坚持自己的直觉，如果你的直觉很好，你最后会成功，如果你的直觉一般，那么你做啥都无所谓（这一条理由简直让人哭笑不得，如果你牛逼，请坚持，你会成功；如果你不牛逼，请坚持，反正你也掀不起什么风浪…）。</li>
+<li>永远不要停止编程</li>
+<li>如果你认为是一个非常好的点子，但是别人都认为这说不通的时候，你可能就真正发现了好东西，比如Hinton当时发现变分时，他把自己的变分工作给别人看时，有一对双胞胎评价：这哥们儿要不是喝多了，要不就是傻。</li>
+</ol>
+<p>对于研究生的建议：找一个和你想法类似的导师，可以得到导师更多的时间和建议</p>
+<p>关于读博士还是去公司：目前机器学习属于一种革命，传统的计算机科学是对机器编程不同，机器学习是向机器展示，让机器自己学习，目前的学校可能没有系统性的教授这类知识体系的经验，教职人员也是缺乏的；而企业里对员工的培训做的很不错，比如Google。</p>
+<h3 id="Pieter-Abbeel"><a href="#Pieter-Abbeel" class="headerlink" title="Pieter Abbeel"></a>Pieter Abbeel</h3><p>一些观点：</p>
+<ol>
+<li>目前的深度增强学习（DeepRL）只能解决短时间的学习问题，比如5s内效果不错，那么整体效果就还不错，如何解决长时间的学习问题是个未来的方向。</li>
+<li>如何在系统达到不错的性能之后，继续学习的更好是个难题。因为那时采集bad example非常困难，也就让系统提升更加困难， exploration很重要。</li>
+<li>虽然Deep RL可以使用一套方法解决许多不同的问题，但是每次都是从头开始学习的，如果旧的学习能够帮助新的学习，那么就能好很多了。</li>
+<li>解决实际问题时，应该都是先使用Supervised Learning模仿人的行为，在性能足够好之后，再引入RL，再考虑长期的reward。</li>
+<li>虽然看RL从头学习非常有趣，可以看到机器从什么都不会到学到一些东西，但是这个过程实在是太久了。</li>
+</ol>
+<h3 id="Ian-Goodfellow"><a href="#Ian-Goodfellow" class="headerlink" title="Ian Goodfellow"></a>Ian Goodfellow</h3><p>一个经历：一次Goodfellow头很痛，医院的医生怀疑他可能脑出血，他在等待MRI结果时，当时大脑里考虑的是（如果自己挂了？）如何让别人继续自己的研究思路进行研究。虽然事后回想起来当时的研究思路很蠢，但是他因此找到了人生的方向。（对此我表示大写的服！）</p>
+<p>一些观点：</p>
+<ol>
+<li>目前，GAN可以应用在很多场合，比如semi-supervised learning、生成其他模型的训练数据、模拟科学实验，但是总体来说，其他生成模型也可以做这些事情。</li>
+<li>现在GAN很不稳定，就像10年前的DL一样，那时使用deep boltzman machine，参数很不好调，但是现在我们使用ReLU，batch normalization，DL的训练就可靠的多了。如果可以像DL那样，稳定的训练GAN，GAN会有更大的应用。</li>
+<li>如果不能找到稳定的训练GAN的方法，那么GAN只会成为机器学习历史上的一个生成模型，最终会被其他生成模型所替代。</li>
+</ol>
+<p>对于从业者的建议：不一定要读博士，做有趣的事情，做好，把代码放在GitHub上，然后就会有人来找你了；在arXiv上发论文也是不错的选择。</p>
+<p>对抗样本问题：关系到ML安全问题，就像之前的计算机安全问题（如果骗机器运行了错误的代码，就是应用级安全，如果在网络中冒充了其他人，就是网络级安全），很多时候在早期意识到安全问题是容易补救的，东西成型后再解决安全问题是比较困难的</p>
+<h3 id="Yoshua-Bengio"><a href="#Yoshua-Bengio" class="headerlink" title="Yoshua Bengio"></a>Yoshua Bengio</h3><p>一些观点：</p>
+<ol>
+<li>无监督学习不只是没有标签的问题，还应该包括机器如何认识世界，发现世界的运转规律等等。</li>
+<li>目前的深度学习成功大多数在感知层面（语音和图像），在更加高层次，比如抽象环节，还有很多工作可以做。</li>
+<li>ICLR 会议是好论文的集中地。</li>
+</ol>
+<h3 id="林元庆"><a href="#林元庆" class="headerlink" title="林元庆"></a>林元庆</h3><p>一些观点：</p>
+<ol>
+<li>百度组织了中国的国家深度学习实验室，这个实验室致力于构建一个深度学习平台，其中有算法框架、数据和计算资源，使得人们可以很容易的复现现有工作，进行新的研究工作。（如果这样一个平台建成了，而且访问也比较容易，那应该对研究会比较有帮助）</li>
+</ol>
+<h3 id="Andrej-Karpathy"><a href="#Andrej-Karpathy" class="headerlink" title="Andrej Karpathy"></a>Andrej Karpathy</h3><p>一些经历：</p>
+<ol>
+<li>通过亲自标数据，研究了人类基线问题，了解人类的水平对于算法研究是非常重要的。</li>
+<li>在博士生阶段在斯坦福开设了cs231n深度学习课程。（比较难以想象一个在读博士生开一门课是什么情况…）</li>
+</ol>
+<p>插一句，我第一次听说Karpathy是看到他的一篇关于博士生的博客：<a href="http://karpathy.github.io/2016/09/07/phd/" target="_blank" rel="external">A Survival Guide to a PhD</a></p>
+<p>一些观点：</p>
+<ol>
+<li>深度学习不只是性能很好，另外一个出乎意料的事情是，transfer learning非常好，可以作为一个比较通用的特征提取器，在image net上的网络可以transfer到其他图像任务上，而且效果很好，这是之前不可想象的。</li>
+<li>认为AI之后会分成两个路径，一是应用AI，解决某个特定问题，二是通用AI，研究智能问题。认为之前人们把人的能力拆分，分别研究各个能力，再整合这个思路是错误的；应该从整体的角度考虑（大概是这个意思，Karpathy表示他已经有想法了，但是不太方便在这里透露）。</li>
+</ol>
+<p>建议：从0开始去实践，了解底层，不要太抽象，直接使用TensorFlow这种框架</p>
+<h3 id="Ruslan-Salakhutdinov"><a href="#Ruslan-Salakhutdinov" class="headerlink" title="Ruslan Salakhutdinov"></a>Ruslan Salakhutdinov</h3><p>经历：当时他在多伦多大学读了硕士，休学了一年，在金融领域工作，对于是否读博士还有些犹豫。一个偶然的机会，准备去上班的路上正好碰到了Hinton，Hinton对他说：“我有一个很棒的想法，来我办公室我给你展示一下”。然后他们边走边谈，Hinton给他讲了玻尔兹曼机，对比散度等算法，当时他并没有听懂Hinton说的是啥。然后，他就读了Hinton的博士……（这经历我只能说是太离奇了…正好能碰上Hinton，Hinton还愿意把自己的想法分享给你…）</p>
+<p>一些观点：</p>
+<ol>
+<li>在计算力不发达时，如果不用RBM，训练需要几个月的时间</li>
+<li>RBM的训练需要使用MCMC等技术，不如梯度下降那么简单、容易推广，如何使得RBM的训练更容易是发展RBM的重要问题</li>
+<li>早期的研究都是从生成模型入手的，生成模型可以有效的作为预训练方法帮助有监督学习。目前由于数据和计算能力的提升，使得直接有监督学习效果很好。但是生成模型的研究还有很大空间，比如GAN，VAE，deep energy model等，目前的问题一是没有真正搞清楚这些东西，另外也没有想清楚能怎么用。</li>
+<li>在公司里，有很多无标注数据，如何使用这些大量的无标注数据，比如半监督学习，是非常需要的。</li>
+</ol>
+<p>PhD vs. 去公司问题：</p>
+<ol>
+<li>PhD：有更大的自由，可以做长远的研究，实现自己”疯狂“的想法。</li>
+<li>去公司：研究也很有趣，可以影响非常多的用户，有很大的计算资源。</li>
+</ol>
+<p>未来的趋势：</p>
+<ol>
+<li>DeepRL</li>
+<li>推理和自然语言理解：dialog system, QA</li>
+<li>少样本学习：one-shot learning, transfer learning</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Andrew-Ng/" rel="tag"># Andrew Ng</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Codes_of_Rap_of_China.html" rel="next" title="中国有嘻哈决赛冠军平票的概率问题(代码实现)">
+                <i class="fa fa-chevron-left"></i> 中国有嘻哈决赛冠军平票的概率问题(代码实现)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <p class="site-author-name" itemprop="name">Miao</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正文"><span class="nav-number">3.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Geoffrey-Hinton"><span class="nav-number">3.1.</span> <span class="nav-text">Geoffrey Hinton</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pieter-Abbeel"><span class="nav-number">3.2.</span> <span class="nav-text">Pieter Abbeel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ian-Goodfellow"><span class="nav-number">3.3.</span> <span class="nav-text">Ian Goodfellow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yoshua-Bengio"><span class="nav-number">3.4.</span> <span class="nav-text">Yoshua Bengio</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#林元庆"><span class="nav-number">3.5.</span> <span class="nav-text">林元庆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Andrej-Karpathy"><span class="nav-number">3.6.</span> <span class="nav-text">Andrej Karpathy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ruslan-Salakhutdinov"><span class="nav-number">3.7.</span> <span class="nav-text">Ruslan Salakhutdinov</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Miao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://miaos-blog.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://limiao06.github.io/interview-of-DLAI.html';
+          this.page.identifier = 'interview-of-DLAI.html';
+          this.page.title = '吴恩达深度学习课程笔记之访谈部分';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://miaos-blog.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
