@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,PaddlePaddle,NLP,Seq2Seq," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="本博客记录了如何使用百度PaddlePaddle框架实现了一个seq2seq模型，并侥幸获得“PaddlePaddle AI 产业应用赛——汽车大师问答摘要与推理”比赛一等奖的过程。  背景一个偶然的机会，发现了一个AI比赛——PaddlePaddle AI 产业应用赛——汽车大师问答摘要与推理。这个比赛要求选手们使用汽车大师所提供的11万条技师与用户的多轮对话与诊断建议报告数据建立模型，从而可基">
+<meta name="keywords" content="DeepLearning,PaddlePaddle,NLP,Seq2Seq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何用PaddlePaddle做摘要">
+<meta property="og:url" content="https://limiao06.github.io/paddle-qiche.html">
+<meta property="og:site_name" content="Miao&#39;s Blog">
+<meta property="og:description" content="本博客记录了如何使用百度PaddlePaddle框架实现了一个seq2seq模型，并侥幸获得“PaddlePaddle AI 产业应用赛——汽车大师问答摘要与推理”比赛一等奖的过程。  背景一个偶然的机会，发现了一个AI比赛——PaddlePaddle AI 产业应用赛——汽车大师问答摘要与推理。这个比赛要求选手们使用汽车大师所提供的11万条技师与用户的多轮对话与诊断建议报告数据建立模型，从而可基">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://limiao06.github.io/images/paddle_qiche_trainset.png">
+<meta property="og:updated_time" content="2018-07-21T02:42:08.705Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何用PaddlePaddle做摘要">
+<meta name="twitter:description" content="本博客记录了如何使用百度PaddlePaddle框架实现了一个seq2seq模型，并侥幸获得“PaddlePaddle AI 产业应用赛——汽车大师问答摘要与推理”比赛一等奖的过程。  背景一个偶然的机会，发现了一个AI比赛——PaddlePaddle AI 产业应用赛——汽车大师问答摘要与推理。这个比赛要求选手们使用汽车大师所提供的11万条技师与用户的多轮对话与诊断建议报告数据建立模型，从而可基">
+<meta name="twitter:image" content="https://limiao06.github.io/images/paddle_qiche_trainset.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://limiao06.github.io/paddle-qiche.html"/>
+
+
+
+
+
+  <title>如何用PaddlePaddle做摘要 | Miao's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6089b74b1c113523d92ac8ca8017dd49";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Miao's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://limiao06.github.io/paddle-qiche.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Miao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Miao's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何用PaddlePaddle做摘要</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-20T13:34:59+08:00">
+                2018-07-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DL/" itemprop="url" rel="index">
+                    <span itemprop="name">DL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/paddle-qiche.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="paddle-qiche.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本博客记录了如何使用百度PaddlePaddle框架实现了一个seq2seq模型，并侥幸获得“PaddlePaddle AI 产业应用赛——汽车大师问答摘要与推理”比赛<a href="https://www.kesci.com/apps/home/competition/5aec0eb10739c42faa203931/content/7" target="_blank" rel="external">一等奖</a>的过程。 </p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>一个偶然的机会，发现了一个AI比赛——<a href="https://www.kesci.com/apps/home/competition/5aec0eb10739c42faa203931" target="_blank" rel="external">PaddlePaddle AI 产业应用赛——汽车大师问答摘要与推理</a>。这个比赛要求选手们使用汽车大师所提供的11万条技师与用户的多轮对话与诊断建议报告数据建立模型，从而可基于对话文本、用户问题、车型与车系，输出包含摘要与推断的报告文本，考验模型的归纳总结与推断能力。</p>
+<p>看到这个比赛后，“多轮对话”数据第一时间吸引了我的注意，先申请参赛看看数据再说。 这个比赛基于<a href="https://www.kesci.com/" target="_blank" rel="external">科赛</a>平台，完成注册后，可以在科赛为你提供的云端虚拟机环境中看到数据，但是没有办法把数据下载到本地，( ⊙ o ⊙ )！ 这么狠，搞数据的想法破灭了，哭。 </p>
+<p>既然报名了，就尝试做一下吧，这毕竟是实际商业场景中产生的真实多轮对话数据。 数据产生的场景是这样的，一些车主在自己的爱车遇到问题时，在汽车大师App上发起提问，专业技师会根据问题（Problem）和用户进行一段对话（Conversation），从而帮助用户解决问题，最后技师根据问题和对话生成一个报告(Report)。 如下图所示。</p>
+<p><img src="/images/paddle_qiche_trainset.png" alt=""></p>
+<p>这个比赛的任务就是给定问题（Problem）和对话内容（Conversation），自动生成报告（Report）， 通过计算算法生成的report和标准答案的ROUGE分数，评估算法的性能。 这个比赛的数据集由10万多条样本的训练集和各5000条样本的开发集和测试集组成。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>如何解决这个问题呢？ 那么要把这个问题抽象一下， 有下面几个角度：</p>
+<ol>
+<li>从Problem 和 Report的关系看， Report是要给出Problem的解答，所以这是个QA问题啊？</li>
+<li>从Conversation 和 Report 的关系看， Report是对Conversation 内容的总结和提炼， 所以这是个文本摘要问题啊？</li>
+<li>结合Problem， Conversation 和Report 一起看，好像是根据问题，从Conversation中提取答案的过程， 所以这是个阅读理解问题啊？</li>
+</ol>
+<p>到底哪一种理解方式好呢？ 我还真通过简单的验证方法进行了尝试：</p>
+<h3 id="角度1：QA问题"><a href="#角度1：QA问题" class="headerlink" title="角度1：QA问题"></a>角度1：QA问题</h3><p>QA问题的一种解决办法是进行问题匹配， 面对一个问题q，从训练集中选择出最相似的问题q’， 然后把q’的答案a’作为答案返回。 为了简单验证一下， 我写了一个简单的baseline，基于tfidf 计算问题相似度，选择训练集中最相似问题的report作为答案返回。 提交！ 一看结果排行榜， 得分14.5，排名倒数第二位， 不要太惨。。。 仔细思考了一下， 可能存在这种情况：虽然提出的问题很像，但是实际情况各有不同，需要通过对话进一步找到真正的问题所在，因此一点都不使用对话信息生成的report是好不到哪里去。</p>
+<h3 id="角度2：-摘要问题"><a href="#角度2：-摘要问题" class="headerlink" title="角度2： 摘要问题"></a>角度2： 摘要问题</h3><p>摘要问题我之前没有实际做过啊，怎么快速明确这个思路好不好呢？ 这里感谢Markus同学分享的<a href="https://www.kesci.com/apps/home/project/5af51a65cb6ed25ca3279186" target="_blank" rel="external">开源项目</a>， 这里他尝试了一个比较粗暴的摘要方式，直接把Conversation中技师说的第一句话作为结果返回（在自动摘要问题中，段落的第一句话通常是比较重要的话）。这个简单粗暴的方法得分是多少？  32.3286分， 我的天！ 看来这个思路比QA要靠谱。</p>
+<h3 id="角度3：-阅读理解问题"><a href="#角度3：-阅读理解问题" class="headerlink" title="角度3： 阅读理解问题"></a>角度3： 阅读理解问题</h3><p>如果看成是阅读理解问题， 那么就是从Conversation中找出能回答Problem的答案， 由于目前的阅读理解数据集的答案长度通常比较短（一般是几个单词），所以state of the art的作法是根据Problem，从Context中选择一段作为答案，模型只要输出答案的开始和结束位置即可。 但是这个任务的report有点长，常常出现几十个甚至上百个词， 而且report中的词好像并不完全是来自于Conversation。 我写了个程序统计了一下， Report中67.7%的词来自于Conversation， 这个比例虽然不低，但是还是让我放弃了从Conversation中选择一段作为Report的方法。</p>
+<h3 id="我的思路"><a href="#我的思路" class="headerlink" title="我的思路"></a>我的思路</h3><p>我更想把这个问题看成是摘要问题， Report是Conversation的摘要，但是是由Problem指导的摘要。 所以我觉得设计一个seq2seq的网络结构， 根据Problem和Conversation， 以生成式（而非抽取式）的方法，生成Report。 在算法上，我很大程度参考了<a href="https://arxiv.org/pdf/1506.03340.pdf" target="_blank" rel="external">Teaching Machines to Read and Comprehend</a> 这篇论文。</p>
+<h2 id="动手"><a href="#动手" class="headerlink" title="动手"></a>动手</h2><p>在明确思路后，就要开始动手了， 这个比赛要求必须使用百度的PaddlePaddle框架，而大家对于这个框架的熟悉程度显然不如tensorflow, pytorch， keras等（我想这可能是我侥幸夺冠的主要原因（囧））。 由于我考虑使用seq2seq结构， 就以PaddlePaddle公开的<a href="https://github.com/PaddlePaddle/book/tree/develop/08.machine_translation" target="_blank" rel="external">机器翻译</a>代码作为基础，实现了自己的模型。 由于代码是运行在科赛的平台上，而且是以notebook的方式运行，所以我的代码并没有整理成为结构分明的代码库，而是一个庞大的notebook。。。目前已经在科赛网上<a href="https://www.kesci.com/apps/home/competition/forum/5b4587e7a6e68e001068b577" target="_blank" rel="external">开源</a>了， 感兴趣的同学可以看一下，其中包含了从预处理到训练到测试的完整流程，所以有点长。。。</p>
+<p>值得提到的一些小的点是：</p>
+<ol>
+<li>利用训练集、开发集和测试集中的文本预训练了词向量作为word embedding层的初值；</li>
+<li>Problem的encoder 和 Conversation 的encoder 共享了参数；</li>
+<li>在attention decoder时， 引入了Problem 的 encoder结果计算attention score；</li>
+<li>Decoder softmax 层的参数矩阵和embedding层共享了参数， 这一点我感觉很重要。</li>
+</ol>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>这个比赛分为初赛和复赛两个阶段。</p>
+<h3 id="初赛"><a href="#初赛" class="headerlink" title="初赛"></a>初赛</h3><p>初赛阶段只能使用科赛提供的CPU环境，而且环境时间只有三个小时，三个小时后得手动“续命”，否则程序就自动断掉了； 三个小时对于使用CPU训练seq2seq网络简直太短了。。。为此我削减了模型复杂度， embedding size和 GRU的hidden size都设为100， 三个小时可以勉强训练1.5个epoch， 如果忘了“续命”，程序被杀掉后，就只能载入最新的checkpoint继续训练， 同时手动调节学习率。 最终<a href="https://www.kesci.com/apps/home/competition/5aec0eb10739c42faa203931/leaderboard/1" target="_blank" rel="external">成绩</a>勉强超过 “暴力选择第一句” baseline， 进入了复赛。当时看自己的排名感觉并没有什么戏，抱着随便搞搞的心态。</p>
+<h3 id="复赛"><a href="#复赛" class="headerlink" title="复赛"></a>复赛</h3><p>复赛阶段可以使用GPU环境， 环境时间变成了3天，真是鸟枪换炮，太爽了。 所以我直接增加了模型复杂度， 将embedding size和 GRU的hidden size增加到了256， 连续训练了5个epoch， 结果一提交， 我的天， 35.4分， 直接到达了当时的第一名！ 我发现成绩不好的时候，动力是很足的，脑袋里思考着各种改进方法， 但是一下到第一之后，懒惰情绪立刻就上来了，各种改进方法就丢到脑后了…… 在训练过程中，我发现decoder在每个时刻预测出正确的词的概率只有50%左右，所以这应该是欠拟合啊， 那么应该继续增加模型复杂度吧。所以我干脆把embedding size和 GRU的hidden size又翻了一倍到512， 在训练了4个epoch开发集性能不再提升时手动降低了学习率又训练了一个epoch，就取得了我最终的最好成绩：36.26+。 这个成绩占据了一段时间的排行榜第一，让我继续松懈下去，最后被别人超过了。。。 被人超过之后，我垂死挣扎了一下，尝试把embedding size和 GRU的hidden size再翻了一倍到1024， 结果并没有效果。。。</p>
+<p>不过，最终，由于我和第二名的分数差距不大， 另外可能我的提交报告写的比较好，总评我取得了第一名，汗。</p>
+<h2 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h2><p>总结一下整个比赛过程，还是有一些想法的：</p>
+<ol>
+<li>我认为绑定Decoder softmax 层的参数矩阵和embedding层的参数是有效果的，但是由于我代码写的有点问题，这个绑定限制了我的网络结构中embedding size和 GRU的 hidden size必须一致，导致我后面把hidden size增加到1024时，embedding size也必须到1024， 我感觉hidden size到1024还可以，甚至更大都行，但是embedding size到512就已经不小了， 实际可以在gru decode之后再加一层，从hidden size 降到embedding size之后， 再过绑定的softmax 就可以了， 当时没有做，可能有效果。</li>
+<li>把GRU换成LSTM有可能还会好一点？</li>
+<li>在摘要中使用CopyNet， Pointer network好像是比较有用的，特别在这个任务中， Report中有67+%的词是来自Conversation， 所以CopyNet， Pointer network应该会更好，但是由于对PaddlePaddle不太熟悉，不会实现这样的网络。。。</li>
+<li>在用seq2seq产生自然语言时， 引入Reinforcement Learning通常是非常有效的，可以解决训练和测试目标不匹配的问题（训练是看每个时刻的分类误差， 而测试时是用ROUGE， BLEU之类的整句的评估算法）， 但是同样没能实现。</li>
+<li>这是我第一次使用PaddlePaddle， 使用的版本好像是paddle_v2 0.11， 总体来说PaddlePaddle使用还可以，实现基本功能的网络比较简单，参考样例代码就可以； 但是由于提供的api有些少，同时官方的文档相比tf和pytorch不够详尽，所以在想实现Pointer network 或者 Reinforcement Learning 等复杂些的网络和功能时就有些吃力。 PaddlePaddle 目前推出了Fluid版本，好像功能强大了不少，感兴趣的同学可以关注一下。</li>
+<li>PaddlePaddle我感觉最强大的功能就是处理文本数据的时候，在一个batch里可以支持边长的输入， 也就是说你完全不需要考虑paddling的问题， 我觉得这个对于做NLP任务的同学真的是太方便了。</li>
+</ol>
+<h2 id="PS"><a href="#PS" class="headerlink" title="PS:"></a>PS:</h2><ol>
+<li>虽然我的代码已经开源了，汽车大师的数据好像在科赛网上也能访问到，但是，按照科赛网提供的CPU环境+2小时限时，是没法正常完成训练的……</li>
+<li>如果有想用PaddlePaddle做类似文本任务的同学，我在博客中介绍的零散思路和我的代码可能会有所帮助， 如果真能起到一点点的帮助作用，那么我写这期博客的目的就达到了90%。</li>
+<li>毕竟还有10%的目的是想记录下自己第一个AI比赛冠军(*^__^*) 。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/PaddlePaddle/" rel="tag"># PaddlePaddle</a>
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+            <a href="/tags/Seq2Seq/" rel="tag"># Seq2Seq</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/interview-of-DLAI.html" rel="next" title="吴恩达深度学习课程笔记之访谈部分">
+                <i class="fa fa-chevron-left"></i> 吴恩达深度学习课程笔记之访谈部分
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <p class="site-author-name" itemprop="name">Miao</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">2.</span> <span class="nav-text">思考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#角度1：QA问题"><span class="nav-number">2.1.</span> <span class="nav-text">角度1：QA问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#角度2：-摘要问题"><span class="nav-number">2.2.</span> <span class="nav-text">角度2： 摘要问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#角度3：-阅读理解问题"><span class="nav-number">2.3.</span> <span class="nav-text">角度3： 阅读理解问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#我的思路"><span class="nav-number">2.4.</span> <span class="nav-text">我的思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动手"><span class="nav-number">3.</span> <span class="nav-text">动手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果"><span class="nav-number">4.</span> <span class="nav-text">结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初赛"><span class="nav-number">4.1.</span> <span class="nav-text">初赛</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复赛"><span class="nav-number">4.2.</span> <span class="nav-text">复赛</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心得"><span class="nav-number">5.</span> <span class="nav-text">心得</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PS"><span class="nav-number">6.</span> <span class="nav-text">PS:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Miao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://miaos-blog.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://limiao06.github.io/paddle-qiche.html';
+          this.page.identifier = 'paddle-qiche.html';
+          this.page.title = '如何用PaddlePaddle做摘要';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://miaos-blog.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

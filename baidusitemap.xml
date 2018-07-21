@@ -4,8 +4,34 @@
 
     
   <url>
+    <loc>https://limiao06.github.io/paddle-qiche.html</loc>
+    <lastmod>2018-07-21T02:42:08.705Z</lastmod>
+    <data>
+        <display>
+        <title>如何用PaddlePaddle做摘要</title>
+        <pubTime>2018-07-20T05:34:59.000Z</pubTime>
+        
+        <tag>DeepLearning</tag>
+         
+        <tag>PaddlePaddle</tag>
+         
+        <tag>NLP</tag>
+         
+        <tag>Seq2Seq</tag>
+         
+         
+           
+             
+              <breadCrumb title="DL" url="https://limiao06.github.io/categories/DL/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://limiao06.github.io/interview-of-DLAI.html</loc>
-    <lastmod>2017-09-19T14:45:15.000Z</lastmod>
+    <lastmod>2017-09-20T02:38:53.000Z</lastmod>
     <data>
         <display>
         <title>吴恩达深度学习课程笔记之访谈部分</title>
@@ -13,9 +39,9 @@
         
         <tag>DeepLearning</tag>
          
-        <tag>Andrew Ng</tag>
-         
         <tag>deeplearning.ai</tag>
+         
+        <tag>Andrew Ng</tag>
          
          
            
