@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,Pytorch,NLP,Paraphrase Identification," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="本博客记录了对“问题相似度计算”这个问题的初步探索尝试，分享了自己参加比赛：拍拍贷——第三届魔镜杯大赛的经历和一些心得，介绍了基于规则和基于深度学习两个角度的方法，希望对读者能有所启发。这个比赛参赛的选手很多，牛人也很多，笔者最终只取得了34名的成绩，刚刚进入前10%(共有350多只队伍提交了结果)。 背景“问题相似度计算”这个问题，顾名思义，就是判断两个问题是否表达相同的含义，是NLP领域很重要">
+<meta name="keywords" content="DeepLearning,Pytorch,NLP,Paraphrase Identification">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“问题相似度计算”问题初探">
+<meta property="og:url" content="https://limiao06.github.io/mojing3.html">
+<meta property="og:site_name" content="Miao&#39;s Blog">
+<meta property="og:description" content="本博客记录了对“问题相似度计算”这个问题的初步探索尝试，分享了自己参加比赛：拍拍贷——第三届魔镜杯大赛的经历和一些心得，介绍了基于规则和基于深度学习两个角度的方法，希望对读者能有所启发。这个比赛参赛的选手很多，牛人也很多，笔者最终只取得了34名的成绩，刚刚进入前10%(共有350多只队伍提交了结果)。 背景“问题相似度计算”这个问题，顾名思义，就是判断两个问题是否表达相同的含义，是NLP领域很重要">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://limiao06.github.io/images/mojing3_questions.png">
+<meta property="og:image" content="https://limiao06.github.io/images/mojing3_net.png">
+<meta property="og:updated_time" content="2018-08-13T14:31:33.266Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="“问题相似度计算”问题初探">
+<meta name="twitter:description" content="本博客记录了对“问题相似度计算”这个问题的初步探索尝试，分享了自己参加比赛：拍拍贷——第三届魔镜杯大赛的经历和一些心得，介绍了基于规则和基于深度学习两个角度的方法，希望对读者能有所启发。这个比赛参赛的选手很多，牛人也很多，笔者最终只取得了34名的成绩，刚刚进入前10%(共有350多只队伍提交了结果)。 背景“问题相似度计算”这个问题，顾名思义，就是判断两个问题是否表达相同的含义，是NLP领域很重要">
+<meta name="twitter:image" content="https://limiao06.github.io/images/mojing3_questions.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://limiao06.github.io/mojing3.html"/>
+
+
+
+
+
+  <title>“问题相似度计算”问题初探 | Miao's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6089b74b1c113523d92ac8ca8017dd49";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Miao's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://limiao06.github.io/mojing3.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Miao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Miao's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">“问题相似度计算”问题初探</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-13T22:10:44+08:00">
+                2018-08-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DL/" itemprop="url" rel="index">
+                    <span itemprop="name">DL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/mojing3.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="mojing3.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本博客记录了对“问题相似度计算”这个问题的初步探索尝试，分享了自己参加比赛：<a href="https://www.ppdai.ai/mirror/goToMirrorDetail?mirrorId=1" target="_blank" rel="external">拍拍贷——第三届魔镜杯大赛</a>的经历和一些心得，介绍了<strong>基于规则</strong>和<strong>基于深度学习</strong>两个角度的方法，希望对读者能有所启发。这个比赛参赛的选手很多，牛人也很多，笔者最终只取得了34名的成绩，刚刚进入前10%(共有350多只队伍提交了结果)。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>“问题相似度计算”这个问题，顾名思义，就是判断两个问题是否表达相同的含义，是NLP领域很重要的一个任务(虽然很重要，但是我之前从来没有实际接触过，囧)。早期在问答(QA)任务，特别是社区问答(CQA，比如百度知道、知乎等)中，这个任务非常重要，由于自然语言的灵活性，不同的人对于相同的问题可能使用不同的表述方式，那么对于某个用户提出的问题，可以使用“问题相似度计算”技术，和所有的已有问题进行计算，如果已有问题中存在某个问题和用户提出的问题意思是一样的，那么那个已有问题的答案就是用户需要的答案。</p>
+<p>近年来，我们国家的服务业在不断发展，客服成了我们日常生活中经常打交道的对象，在客服场景中，“问题相似度计算”这个技术也是非常核心的技术，一方面这个技术是实现智能客服的基础，另一方面，这个技术也可以帮助人工客服实现用户问题和标准问题库中相似问题的快速匹配，从而为客户提供更好的服务。而我这次参加的比赛，就是在金融客服领域的“问题相似度计算”任务。 事实上，在魔镜杯大赛进行的同时，阿里也发布了一个<a href="https://dc.cloud.alipay.com/index#/topic/intro?id=3" target="_blank" rel="external">“金融大脑-金融智能NLP服务”比赛</a>，其任务也是“问题相似度计算”， 从这里也可以看出这个任务在实际商业场景中的重要性。</p>
+<p>下面，我们就简单介绍一下魔镜杯比赛的基本情况。</p>
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><h3 id="任务定义"><a href="#任务定义" class="headerlink" title="任务定义"></a>任务定义</h3><p>魔镜杯比赛的任务非常明确，就是给定一个句子q1和另一个句子q2，系统自动判断这两个句子的含义是相同(label=1)还是不同(label=0)。</p>
+<h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><p>为了让选手可以训练问题相似度计算模型，魔镜杯发布了包含25万多个训练样本的训练集，每个训练样本由(label, q1, q2)组成。训练样本中的正例(label=1，也就是说两个句子含义相同) 和负例(label=0，两个句子含义不同)的数目分别是12万多和13万多，基本平衡。而魔镜杯发布的测试集包含17万多个样本，只给出了q1,q2，需要选手自动输出label。</p>
+<p>对于这种比赛，数据保护是主办方要考虑的一个问题，不同的比赛风格不同，比如我<a href="https://limiao06.github.io/paddle-qiche.html">上一篇博客</a>提到的汽车大师比赛，是利用虚拟化技术，数据放在云端上，无法下载到本地，因此也必须提供云端计算资源。而魔镜杯的方法我感觉非常有特色，那就是先把数据进行“加密”然后再公开，允许选手把数据下载到本地。<strong>下图</strong> 是魔镜杯发布的数据形式，训练集和测试集中的句子并不是以自然语言文本的形式给出的，而是给出了id化的词序列和字序列两种方式，词序列由词id组成，字序列由字id组成，无法直接看懂原句到底是什么。魔镜杯提供了2万个词左右的词典和3千个字左右的字典，并且提供了300维的词向量和300维的字向量。</p>
+<p><img src="/images/mojing3_questions.png" alt=""></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>看到这个问题，我产生了两方面的思路，一是规则方法，二是机器学习方法。首先来看规则方法：</p>
+<h3 id="规则方法"><a href="#规则方法" class="headerlink" title="规则方法"></a>规则方法</h3><p>本文所谓规则方法，是指不利用统计学习方法，而仅利用“含义相同”和“含义不同”这两种关系的特点进行推理的方法。</p>
+<p>“含义相同” 和 “含义不同” 在本任务中都属于二元关系，可以作用于两个问题实例q1和q2，构成一个三元组(q1, r, q2)，这里指定r1表示“含义相同”，r0表示“含义不同”。下面我们可以讨论下r1和r0的性质。</p>
+<ul>
+<li>性质1： r1和r0都有对称性：即 (q1,r1,q2) 可以导出 (q2,r1,q1)，缩写为 (q1,r1,q2) =&gt; (q2,r1,q1)； 同样， (q1,r0,q2) =&gt; (q2,r0,q1)。 这个很好理解。</li>
+<li>性质2： r1有传递性：  (q1,r1,q2) and  (q2,r1,q3) =&gt; (q1,r1,q3)，这个也很好理解，如果q1和q2含义相同，q2和q3含义相同，那么q1和q3含义也相同，事实上这时q1,q2,q3构成了一个同义集， 集合中任意两个问句的含义都相同。</li>
+<li>性质3： r0有<strong>特殊</strong>的传递性（不知道这个性质较叫什么）： (q1,r1,q2) and  (q2,r0,q3) =&gt; (q1,r0,q3)，解释一下，如果q1和q2含义相同，但是q2和q3含义不同，那么q1和q3的含义也就不同，其实也很容易理解。</li>
+</ul>
+<p>好了，在明确了r1和r0的特殊性质后，我们可以利用其性质，进行“关系补全”。训练集实际上提供了许多问题实例以及这些实例之间的关系，利用上述的性质2和性质3，我们可以基于训练集给出的实例和部分实例之间的关系，补全更多的实例之间的关系，具体做法可以分为两步：</p>
+<ol>
+<li>利用性质2，寻找同义集合：对于训练集中所有“含义相同”的训练样本，可以根据性质2，将问句聚合成为许多个同义集合，同义集合中任意两个问句的含义都相同；</li>
+<li>利用性质3，寻找同义集合间的“含义不同关系”： 这个话说起来有些绕，但是其实也很好理解，举个例子。对于两个同义集合S1和S2，我们一开始不知道这两个集合之间的关系，如果在训练集中我们发现了一个样本(q1, r1, q2)，并且q1属于S1，q2属于S2，那么根据性质2，我们可以导出S1和S2可以合并为一个大的同义集合；那么如果在训练集中我们发现了一个样本(q1, r0, q2)，并且q1属于S1，q2属于S2，那么根据性质3，实际上S1和S2之间就存在“含义不同”的关系，对于S1中的任意一个问句q1’和S2中的任意一个问句q2’，都存在“含义不同的关系”：(q1’, r0, q2’)。</li>
+</ol>
+<p>通过上述这两步，我们可以得到很多同义集合S1,S2,…, 同时还知道了一些同义集合之间存在“含义不同”关系。这时，对于测试集中的一个样本q1, q2，我们就可以利用上述信息，进行判断了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">if q1, q2属于同一个同义集合：</div><div class="line">    return 1	#含义相同</div><div class="line">else:</div><div class="line">	# 假定 q1属于S1, q2属于S2</div><div class="line">	if (S1, r0, S2):</div><div class="line">		return 0	#含义不同</div><div class="line">	else：</div><div class="line">		return -1	#我不知道</div></pre></td></tr></table></figure>
+<p>这时可能会有同学说，哎，你这个规则方法不行啊，存在“我不知道”的情况呢，那确实，所以才需要基于统计学习的方法嘛。 </p>
+<p>在比赛中，我使用基于规则的方法对基于统计机器学习方法输出的结果进行修正，如果基于规则的方法知道答案，那就用规则方法的答案，否则就使用统计方法的答案。</p>
+<p>通过统计，基于规则的方法可以处理测试集中 <strong>10.54%</strong> 的样本，这个比例不算低了吧。</p>
+<h3 id="机器学习方法"><a href="#机器学习方法" class="headerlink" title="机器学习方法"></a>机器学习方法</h3><p>之前提到过，我并不是很熟悉这个任务， 碰巧前段时间看过FAIR的一篇利用SNLI数据集有监督地训练句子向量表示的论文”<a href="https://arxiv.org/abs/1705.02364" target="_blank" rel="external">Supervised Learning of Universal Sentence Representations from Natural Language Inference Data</a>“， 感觉任务比较类似，所以就以这个论文的方法为基础进行了尝试。</p>
+<p>SNLI任务是判断两个句子间的语义关系的，比如蕴含（entailment）、矛盾（contradiction）、中性（neutral）。上述的论文使用的方法是这样，先使用encoder对两个句子进行编码，得到向量表示u,v， 然后将u,v, |u-v|, u<em>v 这四个向量连起来，经过一个MLP网络，输出三分类。结果如<em>*下图</em></em>所示。</p>
+<p><img src="/images/mojing3_net.png" alt=""></p>
+<p>论文对比了多种encoder的效果， 包括：</p>
+<ul>
+<li>LSTM/GRU-last：使用LSTM或GRU对句子进行编码，然后选最后一个时刻的状态作为句向量表示， 可以单向也可以双向</li>
+<li>BiLSTM with mean/max pooling： 使用双向LSTM对句子进行编码，然后通过mean/max pooling 得到句子的定长向量表示</li>
+<li>Self Attention： 在BiLSTM的结果基础上，使用self-attention机制作为pooling方法得到句子的定长向量表示</li>
+<li>Hierarchical ConvNet： 使用深层（4层）CNN网络对句子进行编码， 然将每层经过max pooling后的定长向量连起来，作为句子的向量表示。</li>
+</ul>
+<p>通过实验，该论文给出的结论是： <strong>BiLSTM + max pooling 效果最好。</strong> </p>
+<p>这篇论文在GitHub上有官方的开源代码<a href="https://github.com/facebookresearch/InferSent" target="_blank" rel="external">InferSent</a>， 那么直接拿来用就好了。</p>
+<p>在上述代码基础上，我做的工作有：</p>
+<ol>
+<li>源代码使用<a href="https://nlp.stanford.edu/projects/glove/" target="_blank" rel="external">GloVe</a> (V1) or <a href="https://fasttext.cc/docs/en/english-vectors.html" target="_blank" rel="external">fastText</a> 作为预训练的embedding，并且代码中并没有finetune embedding， 我尝试加入了finetune embedding，结果效果并不好；</li>
+<li>由于这个网络结果对于q1和q2来说不是对称的，因此我在训练时会随机调整q1和q2的顺序；</li>
+<li>在魔镜数据集上测试了各个encoder的性能，结果发现“BLSTMprojEncoder + max pooling” 效果最好，BLSTMprojEncoder的主要区别是加入了一个线性层将BiLSTM的状态进行了映射，然后再经过max/mean pooling；</li>
+<li>对LSTM的层数设置进行了尝试，发现2层效果会更好，但是3层的效果会下降。</li>
+<li>之前使用的都是基于词方法，我同时尝试了基于字的方法，发现效果差不多；</li>
+<li>加入cross validation， 将训练集分成了10份， 以9份作为训练集， 1份作为开发集， 训练了10个模型， 然后ensemble。</li>
+</ol>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>我的代码也公布在了<a href="https://github.com/limiao06/mojingbei3" target="_blank" rel="external">GitHub</a>上。</p>
+<p>最终我的结果是三个模型ensemble的结果，这三个模型分别是：</p>
+<ol>
+<li>2layer BLSTMprojEncoder + word feature + maxpooling + cv</li>
+<li>1layer BLSTMprojEncoder + word feature + maxpooling + cv</li>
+<li>1layer BLSTMprojEncoder + char feature + maxpooling + cv</li>
+</ol>
+<p>当然最后的结果还使用规则系统的方法修正了一下。</p>
+<h2 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h2><p>下面总结一下吧：</p>
+<ol>
+<li>由于我的代码设计的有问题，只能要么使用word feature，要么使用char feature， 只能在ensemble时融合两种信息，可能在一个模型里融合这两种信息效果会更好；</li>
+<li>另一个问题是由于对InferSent代码的修改非常少，只能用max pooling或者mean pooling，感觉如果max pooling和mean pooling的结果连接起来一起用可能会更好；</li>
+<li>在调优时，我一开始使用SGD， 发现SGD对于不同的batch size效果不同，我扫描搜索了一下发现batch size不能太大，大概是128左右； 后来尝试了一下ADAM， 发现正好相反， ADAM对于大的batch size 效果比较好， 而小batch size 效果反而差。 这个结论不知道对于其他数据集或者任务是否适用。</li>
+<li>可能有同学发现了，基于规则的方法实际上可以增加了训练样本，是的，但是由于我是利用业余时间随便搞搞，在最后一天草草尝试了一下数据扩充发现没有取得很好的效果，事后感觉应该早一点试试数据扩充的，可能能进一步提高结果。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+            <a href="/tags/Paraphrase-Identification/" rel="tag"># Paraphrase Identification</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/paddle-qiche.html" rel="next" title="如何用PaddlePaddle做摘要">
+                <i class="fa fa-chevron-left"></i> 如何用PaddlePaddle做摘要
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <p class="site-author-name" itemprop="name">Miao</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#任务"><span class="nav-number">2.</span> <span class="nav-text">任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#任务定义"><span class="nav-number">2.1.</span> <span class="nav-text">任务定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据集"><span class="nav-number">2.2.</span> <span class="nav-text">数据集</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">3.</span> <span class="nav-text">思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#规则方法"><span class="nav-number">3.1.</span> <span class="nav-text">规则方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#机器学习方法"><span class="nav-number">3.2.</span> <span class="nav-text">机器学习方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">4.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心得"><span class="nav-number">5.</span> <span class="nav-text">心得</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Miao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://miaos-blog.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://limiao06.github.io/mojing3.html';
+          this.page.identifier = 'mojing3.html';
+          this.page.title = '“问题相似度计算”问题初探';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://miaos-blog.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

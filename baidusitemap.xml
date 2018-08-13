@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>https://limiao06.github.io/mojing3.html</loc>
+    <lastmod>2018-08-13T14:31:33.266Z</lastmod>
+    <data>
+        <display>
+        <title>“问题相似度计算”问题初探</title>
+        <pubTime>2018-08-13T14:10:44.000Z</pubTime>
+        
+        <tag>DeepLearning</tag>
+         
+        <tag>Pytorch</tag>
+         
+        <tag>NLP</tag>
+         
+        <tag>Paraphrase Identification</tag>
+         
+         
+           
+             
+              <breadCrumb title="DL" url="https://limiao06.github.io/categories/DL/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://limiao06.github.io/paddle-qiche.html</loc>
     <lastmod>2018-07-21T05:36:01.015Z</lastmod>
     <data>
@@ -13,9 +39,9 @@
         
         <tag>DeepLearning</tag>
          
-        <tag>PaddlePaddle</tag>
-         
         <tag>NLP</tag>
+         
+        <tag>PaddlePaddle</tag>
          
         <tag>Seq2Seq</tag>
          
